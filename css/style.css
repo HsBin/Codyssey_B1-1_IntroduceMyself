@@ -6,6 +6,7 @@
     --secondary-color: #f3f4f6;
     --card-color: #ffffff;
     --border-color: #dddddd;
+    --muted-text-color: #666666; /*다크모드 고려수정*/
 
     --font-size-base: 16px;
 
@@ -22,6 +23,7 @@
     --secondary-color: #1f1f1f;
     --card-color: #242424;
     --border-color: #444444;
+    --muted-text-color: #bbbbbb; /*다크모드 고려수정*/
 }
 
 
@@ -61,4 +63,180 @@ textarea {
 img {
     max-width: 100%;
     height: auto;
+}
+
+/* Header */
+header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-medium);
+}
+
+/* 로고 */
+nav > a {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+/* 모바일 메뉴 */
+nav ul {
+    display: none;
+
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    width: 100%;
+    padding: var(--spacing-medium);
+
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+nav ul.active {
+    display: block;
+}
+
+nav li {
+    margin-bottom: var(--spacing-medium);
+}
+
+nav li:last-child {
+    margin-bottom: 0;
+}
+
+nav li a {
+    display: block;
+}
+
+/* 버튼 */
+#theme-toggle,
+#menu-toggle {
+    padding: var(--spacing-small);
+    border: none;
+    background: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.25rem;
+}
+
+
+/* 공통 Section */
+section {
+    padding: 80px var(--spacing-medium);
+}
+
+section h2 {
+    margin-bottom: var(--spacing-large);
+    font-size: 2rem;
+    text-align: center;
+}
+
+
+/* Hero Section */
+#hero {
+    min-height: 90vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+#hero h1 {
+    margin-bottom: var(--spacing-medium);
+    font-size: 2.5rem;
+}
+
+#hero p {
+    margin-bottom: var(--spacing-large);
+    color: var(--muted-text-color);
+}
+
+#hero a {
+    display: inline-block;
+
+    margin: var(--spacing-small);
+    padding: 12px 24px;
+
+    background-color: var(--primary-color);
+    color: #ffffff;
+
+    border-radius: 8px;
+
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+#hero a:hover {
+    transform: translateY(-3px);
+    opacity: 0.9;
+}
+
+
+/* About Section */
+#about {
+    background-color: var(--secondary-color);
+    text-align: center;
+}
+
+#about img {
+    width: 180px;
+    height: 180px;
+
+    margin-bottom: var(--spacing-large);
+
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+#about div {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#about p {
+    margin-bottom: var(--spacing-medium);
+}
+
+
+/* Tablet */
+/* 브레이크 포인트 768px */
+@media (min-width: 768px) {
+
+    nav ul {
+        display: flex;
+        position: static;
+
+        width: auto;
+        padding: 0;
+
+        background: none;
+        border: none;
+
+        gap: var(--spacing-large);
+    }
+
+    nav li {
+        margin-bottom: 0;
+    }
+
+    #menu-toggle {
+        display: none;
+    }
 }
