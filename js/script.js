@@ -80,3 +80,54 @@ const observer = new IntersectionObserver(
 sections.forEach((section) => {
     observer.observe(section);
 });
+
+// 문의 폼 유효성 검사
+const contactForm = document.querySelector("#contact-form");
+
+const nameInput = document.querySelector("#name");
+const emailInput = document.querySelector("#email");
+const messageInput = document.querySelector("#message");
+
+const nameError = document.querySelector("#name-error");
+const emailError = document.querySelector("#email-error");
+const messageError = document.querySelector("#message-error");
+const formSuccess = document.querySelector("#form-success");
+
+const validateEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+};
+
+contactForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    let isValid = true;
+
+    nameError.textContent = "";
+    emailError.textContent = "";
+    messageError.textContent = "";
+    formSuccess.textContent = "";
+
+    if (nameInput.value.trim() === "") {
+        nameError.textContent = "이름을 입력해주세요.";
+        isValid = false;
+    }
+
+    if (emailInput.value.trim() === "") {
+        emailError.textContent = "이메일을 입력해주세요.";
+        isValid = false;
+    } else if (!validateEmail(emailInput.value.trim())) {
+        emailError.textContent = "올바른 이메일 형식을 입력해주세요.";
+        isValid = false;
+    }
+
+    if (messageInput.value.trim() === "") {
+        messageError.textContent = "메시지를 입력해주세요.";
+        isValid = false;
+    }
+
+    if (isValid) {
+        formSuccess.textContent = "문의가 정상적으로 작성되었습니다.";
+        contactForm.reset();
+    }
+});
