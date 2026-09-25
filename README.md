@@ -118,3 +118,9 @@ cd Codyssey_B1-1_IntroduceMyself
 ### 모바일 화면
 
 ![모바일 화면](images/screenshots/mobile.png)
+
+## 배포 주소
+
+GitHub Pages를 통해 배포했습니다.
+
+https://hsbin.github.io/Codyssey_B1-1_IntroduceMyself/
