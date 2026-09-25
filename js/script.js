@@ -154,12 +154,11 @@ messageInput.addEventListener("input", () => {
 });
 
 // GitHub 프로젝트
+// GitHub 프로젝트
 const projectList = document.querySelector("#project-list");
-const filterButtons = document.querySelectorAll(
-    "#project-filter button"
-);
+const projectFilter = document.querySelector("#project-filter");
 
-
+// 프로젝트 상태
 let projectState = {
     status: "loading",
     projects: [],
@@ -167,14 +166,44 @@ let projectState = {
     language: "all"
 };
 
+// 실제 GitHub 프로젝트에 존재하는 언어로 필터 버튼 생성
+const renderFilters = (projects) => {
+    const languages = [
+        ...new Set(
+            projects
+                .map((project) => project.language)
+                .filter((language) => language)
+        )
+    ];
+
+    projectFilter.innerHTML = `
+        <button type="button" data-language="all" class="active">
+            전체
+        </button>
+
+        ${languages
+            .map((language) => {
+                return `
+                    <button type="button" data-language="${language}">
+                        ${language}
+                    </button>
+                `;
+            })
+            .join("")}
+    `;
+};
+
+// 프로젝트 화면 출력
 const renderProjects = () => {
     const { status, projects, error, language } = projectState;
 
+    // 로딩
     if (status === "loading") {
         projectList.innerHTML = "<p>프로젝트를 불러오는 중...</p>";
         return;
     }
 
+    // 오류
     if (status === "error") {
         projectList.innerHTML = `
             <div>
@@ -192,68 +221,78 @@ const renderProjects = () => {
         return;
     }
 
+    // 프로젝트가 없는 경우
     if (status === "success" && projects.length === 0) {
         projectList.innerHTML = "<p>표시할 프로젝트가 없습니다.</p>";
         return;
     }
 
-    //필터
+    // 선택된 언어에 따라 프로젝트 필터링
     const filteredProjects =
-    language === "all"
-        ? projects
-        : projects.filter((project) => {
-              return project.language === language;
-          });
+        language === "all"
+            ? projects
+            : projects.filter((project) => {
+                  return project.language === language;
+              });
 
     // 필터 결과가 없는 경우
     if (filteredProjects.length === 0) {
-        projectList.innerHTML = "<p>해당 언어의 프로젝트가 없습니다.</p>";
+        projectList.innerHTML =
+            "<p>해당 언어의 프로젝트가 없습니다.</p>";
         return;
     }
 
+    // 프로젝트 카드 생성
     projectList.innerHTML = filteredProjects
-    .map((project) => {
-        return `
-            <article class="project-card">
-                <h3>${project.name}</h3>
+        .map((project) => {
+            return `
+                <article class="project-card">
+                    <h3>${project.name}</h3>
 
-                <p>
-                    ${project.description || "프로젝트 설명이 없습니다."}
-                </p>
+                    <p>
+                        ${project.description || "프로젝트 설명이 없습니다."}
+                    </p>
 
-                <p>
-                    사용 언어: ${project.language || "정보 없음"}
-                </p>
+                    <p>
+                        사용 언어: ${project.language || "정보 없음"}
+                    </p>
 
-                <a
-                    href="${project.html_url}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    GitHub에서 보기
-                </a>
-            </article>
-        `;
-    })
-    .join("");
+                    <a
+                        href="${project.html_url}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        GitHub에서 보기
+                    </a>
+                </article>
+            `;
+        })
+        .join("");
 };
 
-filterButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-        const { language } = button.dataset;
+// 동적으로 생성된 필터 버튼 클릭 처리
+projectFilter.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
 
-        projectState.language = language;
+    if (!button) {
+        return;
+    }
 
-        filterButtons.forEach((item) => {
-            item.classList.remove("active");
-        });
+    const { language } = button.dataset;
 
-        button.classList.add("active");
+    projectState.language = language;
 
-        renderProjects();
+    const filterButtons =
+        projectFilter.querySelectorAll("button");
+
+    filterButtons.forEach((item) => {
+        item.classList.remove("active");
     });
-});
 
+    button.classList.add("active");
+
+    renderProjects();
+});
 
 // GitHub 저장소 불러오기
 const fetchProjects = async () => {
@@ -271,17 +310,17 @@ const fetchProjects = async () => {
             "https://api.github.com/users/HsBin/repos"
         );
 
-    if (response.status === 403) {
-        throw new Error(
-            "GitHub API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요."
-        );
-    }
+        if (response.status === 403) {
+            throw new Error(
+                "GitHub API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요."
+            );
+        }
 
-    if (!response.ok) {
-        throw new Error(
-            `GitHub 프로젝트를 불러오지 못했습니다. (${response.status})`
-        );
-    }
+        if (!response.ok) {
+            throw new Error(
+                `GitHub 프로젝트를 불러오지 못했습니다. (${response.status})`
+            );
+        }
 
         const data = await response.json();
 
@@ -289,16 +328,20 @@ const fetchProjects = async () => {
             status: "success",
             projects: data,
             error: null,
-            language: projectState.language
+            language: "all"
         };
 
+        // API 데이터를 받은 후 필터 버튼 생성
+        renderFilters(data);
+
+        // 프로젝트 카드 생성
         renderProjects();
     } catch (error) {
         projectState = {
             status: "error",
             projects: [],
             error: error.message,
-            language: projectState.language
+            language: "all"
         };
 
         renderProjects();
