@@ -141,6 +141,18 @@ contactForm.addEventListener("submit", (event) => {
     }
 });
 
+nameInput.addEventListener("input", () => {
+    nameError.textContent = "";
+});
+
+emailInput.addEventListener("input", () => {
+    emailError.textContent = "";
+});
+
+messageInput.addEventListener("input", () => {
+    messageError.textContent = "";
+});
+
 // GitHub 프로젝트
 const projectList = document.querySelector("#project-list");
 const filterButtons = document.querySelectorAll(
