@@ -6,6 +6,15 @@ menuToggle.addEventListener("click", () => {
     navMenu.classList.toggle("active");
 });
 
+const navLinks = document.querySelectorAll("nav ul a");
+
+navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+        navMenu.classList.remove("active");
+    });
+});
+
+
 // 다크 모드
 const themeToggle = document.querySelector("#theme-toggle");
 
@@ -134,15 +143,20 @@ contactForm.addEventListener("submit", (event) => {
 
 // GitHub 프로젝트
 const projectList = document.querySelector("#project-list");
+const filterButtons = document.querySelectorAll(
+    "#project-filter button"
+);
+
 
 let projectState = {
     status: "loading",
     projects: [],
-    error: null
+    error: null,
+    language: "all"
 };
 
 const renderProjects = () => {
-    const { status, projects, error } = projectState;
+    const { status, projects, error, language } = projectState;
 
     if (status === "loading") {
         projectList.innerHTML = "<p>프로젝트를 불러오는 중...</p>";
@@ -171,7 +185,21 @@ const renderProjects = () => {
         return;
     }
 
-    projectList.innerHTML = projects
+    //필터
+    const filteredProjects =
+    language === "all"
+        ? projects
+        : projects.filter((project) => {
+              return project.language === language;
+          });
+
+    // 필터 결과가 없는 경우
+    if (filteredProjects.length === 0) {
+        projectList.innerHTML = "<p>해당 언어의 프로젝트가 없습니다.</p>";
+        return;
+    }
+
+    projectList.innerHTML = filteredProjects
     .map((project) => {
         return `
             <article class="project-card">
@@ -198,12 +226,30 @@ const renderProjects = () => {
     .join("");
 };
 
+filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        const { language } = button.dataset;
+
+        projectState.language = language;
+
+        filterButtons.forEach((item) => {
+            item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        renderProjects();
+    });
+});
+
+
 // GitHub 저장소 불러오기
 const fetchProjects = async () => {
     projectState = {
         status: "loading",
         projects: [],
-        error: null
+        error: null,
+        language: projectState.language
     };
 
     renderProjects();
@@ -230,7 +276,8 @@ const fetchProjects = async () => {
         projectState = {
             status: "success",
             projects: data,
-            error: null
+            error: null,
+            language: projectState.language
         };
 
         renderProjects();
@@ -238,7 +285,8 @@ const fetchProjects = async () => {
         projectState = {
             status: "error",
             projects: [],
-            error: error.message
+            error: error.message,
+            language: projectState.language
         };
 
         renderProjects();

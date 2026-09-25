@@ -288,6 +288,37 @@ section h2 {
     color: var(--muted-text-color);
 }
 
+/* Project Filter */
+#project-filter {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-small);
+
+    margin-bottom: var(--spacing-large);
+}
+
+#project-filter button {
+    padding: 8px 16px;
+
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+
+    background-color: var(--card-color);
+    color: var(--text-color);
+
+    cursor: pointer;
+
+    transition: background-color 0.2s, color 0.2s;
+}
+
+#project-filter button:hover,
+#project-filter button.active {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+
 
 /* Contact Section */
 #contact-form {
