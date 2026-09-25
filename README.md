@@ -99,3 +99,22 @@ cd Codyssey_B1-1_IntroduceMyself
 
 별도의 프레임워크나 패키지 설치 없이 실행할 수 있습니다.
 
+
+
+## 실행 화면
+
+### 메인 화면
+
+![메인 화면](images/screenshots/main.png)
+
+### GitHub 프로젝트
+
+![GitHub 프로젝트](images/screenshots/projects.png)
+
+### 다크 모드
+
+![다크 모드](images/screenshots/dark-mode.png)
+
+### 모바일 화면
+
+![모바일 화면](images/screenshots/mobile.png)
